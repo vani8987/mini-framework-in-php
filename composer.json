@@ -1,0 +1,29 @@
+{
+    "name": "vani8987/mini-framework",
+    "description": "A small PHP framework with routing, requests, responses, database access, migrations, and logging.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "php",
+        "framework",
+        "api",
+        "router",
+        "pdo"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Core\\": "Core/",
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Иван",
+            "email": "vano-smole@mail.ru"
+        }
+    ],
+    "require": {
+        "php": ">=8.0",
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
