@@ -1,7 +1,16 @@
 # Mini Framework
 
 Небольшой PHP-фреймворк с роутингом, JSON-ответами, запросами, PDO,
-миграциями и логированием.
+миграциями, логированием и сессионной авторизацией.
+
+## Авторизация
+
+Фреймворк включает авторизацию на основе сессий, защищённые маршруты и
+контракт модели для поиска пользователей. Описание находится в
+[документации по авторизации](docs/auth.md).
+
+Рабочая демонстрация находится в `app/Controllers/AuthController.php`,
+`Routes/api.php` и `database/Migrations/002_CreateUsers.php`.
 
 ## Возможности
 
@@ -52,52 +61,57 @@ php command.php serve
 composer create-project vani8987/mini-framework project-name
 ```
 
-## Пример API с базой данных
+## Демонстрационное API авторизации
 
-Сначала запусти миграцию, которая создаст таблицу `examples`:
+Сначала запусти миграции, которые создадут таблицу `users`:
 
 ```bash
 php command.php migrate:run
 ```
 
-В консоли браузера создай запись:
+В консоли браузера зарегистрируй пользователя:
 
 ```js
-fetch('http://localhost:8000/api/examples', {
+fetch('/auth/register', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ title: 'First example' }),
+  body: JSON.stringify({
+    email: 'user@example.com',
+    password: 'secret',
+  }),
 })
   .then((response) => response.json())
   .then((data) => console.log(data));
 ```
 
-Получи список записей:
+Выполни вход:
 
 ```js
-fetch('http://localhost:8000/api/examples')
+fetch('/auth/login', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: 'user@example.com',
+    password: 'secret',
+  }),
+})
   .then((response) => response.json())
   .then((data) => console.log(data));
 ```
 
-Ответ:
+Получи данные текущего пользователя:
 
-```json
-{
-  "data": [
-    {
-      "id": 1,
-      "title": "First example",
-      "created_at": "2026-06-21 12:00:00"
-    }
-  ]
-}
+```js
+fetch('/auth/me')
+  .then((response) => response.json())
+  .then((data) => console.log(data));
 ```
 
-Маршрут зарегистрирован в `Routes/api.php`, а контроллер находится в
-`app/Controllers/ExampleController.php`. Миграция лежит в
-`database/Migrations/001_CreateTableExamples.php`, а модель — в
-`app/Models/Example.php`.
+Когда JavaScript и API работают на одном домене и порту, браузер сам отправит
+cookie сессии после входа.
+
+Доступны маршруты `POST /auth/register`, `POST /auth/login`,
+`GET /auth/me` и `POST /auth/logout`.
 
 ## Структура
 
@@ -107,7 +121,7 @@ app/                  Контроллеры API-приложения
 Routes/               Регистрация маршрутов приложения
 database/Migrations/  Миграции приложения
 docs/                 Документация классов
-log/                  Runtime-логи
+log/                  Логи времени выполнения
 public/               HTTP-точка входа
 ```
 

@@ -12,6 +12,7 @@ interface ModelInterface {
     public function find(array $nameColumns, int $id): ?array;
     public function update(array $nameColumns, array $arrValues, int $id): bool;
     public function findAll(array $nameColumns): array;
+    public function findOneBy(array $nameColumns, string $whereColumn, mixed $value): ?array;
 }
 
 class CRUD extends ConnectDB implements ModelInterface  {
@@ -135,6 +136,25 @@ class CRUD extends ConnectDB implements ModelInterface  {
             return $result === false ? null : $result;
         } catch (Exception $err) {
             $this->logger->error('CRUD find failed: ' . $err->getMessage());
+            return null;
+        }
+    }
+
+    public function findOneBy(array $nameColumns, string $whereColumn, mixed $value): ?array {
+        try {
+            $columns = implode(', ', $this->quoteIdentifiers($nameColumns));
+            $conditionColumn = $this->quoteIdentifier($whereColumn);
+
+            $statement = $this->pdo->prepare(
+                "SELECT {$columns} FROM {$this->name} WHERE {$conditionColumn} = ? LIMIT 1"
+            );
+            $statement->execute([$value]);
+
+            $this->logger->info("Record requested from {$this->name} by {$whereColumn}.");
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
+            return $result === false ? null : $result;
+        } catch (Exception $err) {
+            $this->logger->error('CRUD findOneBy failed: ' . $err->getMessage());
             return null;
         }
     }

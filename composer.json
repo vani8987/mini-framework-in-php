@@ -1,6 +1,6 @@
 {
     "name": "vani8987/mini-framework",
-    "description": "A small PHP framework with routing, requests, responses, database access, migrations, and logging.",
+    "description": "Небольшой PHP-фреймворк с роутингом, запросами, ответами, доступом к базе данных, миграциями и логированием.",
     "type": "library",
     "license": "MIT",
     "keywords": [

@@ -1,6 +1,5 @@
 <?php
-
-use Core\Router;
+session_start();
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -20,6 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once __DIR__ . '/../Routes/api.php';
 
-$router = new Router();
+use App\Models\User;
+use Core\Auth;
+use Core\Router;
+
+$auth = new Auth(new User());
+$router = new Router($auth);
 
 $router->dispatch();
