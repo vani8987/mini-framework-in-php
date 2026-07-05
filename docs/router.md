@@ -44,3 +44,29 @@ Router::route('/api/examples', 'POST', [ExampleController::class, 'store']);
 7. Создает контроллер и вызывает нужный метод, передавая параметры URL по
    порядку.
 8. Если совпадения нет, отправляет `404`.
+
+## Middleware маршрута
+
+Пятый аргумент `Router::route()` позволяет указать middleware-проверки, которые выполняются до контроллера.
+
+```php
+use App\Middleware\AuthMiddleware;
+
+Router::route(
+    '/auth/me',
+    'GET',
+    [AuthController::class, 'me'],
+    false,
+    [AuthMiddleware::class, ['userAuth']]
+);
+```
+
+Формат:
+
+```php
+[MiddlewareClass::class, ['methodName', 'anotherMethod']]
+```
+
+Router создаёт объект middleware и вызывает методы по порядку. Если любой метод вернул `false`, контроллер не вызывается, а router возвращает JSON-ответ `401 Unauthorized`.
+
+Старый четвёртый аргумент `$auth` остаётся для обратной совместимости. Для новых маршрутов предпочтительнее использовать middleware, потому что проверка видна прямо в описании маршрута и может состоять из нескольких методов.

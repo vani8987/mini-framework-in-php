@@ -38,6 +38,22 @@ Router::route('/auth/login', 'POST', [AuthController::class, 'login']);
 Router::route('/auth/me', 'GET', [AuthController::class, 'me'], true);
 ```
 
+Новый вариант — использовать middleware в пятом аргументе:
+
+```php
+use App\Middleware\AuthMiddleware;
+
+Router::route(
+    '/auth/me',
+    'GET',
+    [AuthController::class, 'me'],
+    false,
+    [AuthMiddleware::class, ['userAuth']]
+);
+```
+
+В этом случае `AuthMiddleware::userAuth()` выполнится до контроллера. Если пользователь не авторизован, router вернёт `401 Unauthorized`, а метод контроллера не будет вызван.
+
 Если у защищённого маршрута нет авторизованной сессии, `Router` вернёт ответ:
 
 ```json
@@ -45,6 +61,27 @@ Router::route('/auth/me', 'GET', [AuthController::class, 'me'], true);
 ```
 
 со статусом HTTP `401`.
+
+## Middleware авторизации
+
+`App\Middleware\AuthMiddleware` можно использовать для ручной проверки
+авторизации в коде приложения. Метод `userAuth()`:
+
+1. Берёт `auth_user_id` из PHP-сессии.
+2. Проверяет, что значение существует и является числовым ID.
+3. Ищет пользователя в таблице `users` через модель `App\Models\User`.
+4. Возвращает `true`, если пользователь найден, и `false`, если сессия пустая
+   или пользователь больше не существует.
+
+Пример:
+
+```php
+$middleware = new AuthMiddleware();
+
+if (!$middleware->userAuth()) {
+    // Пользователь не авторизован.
+}
+```
 
 ## Последовательность входа
 

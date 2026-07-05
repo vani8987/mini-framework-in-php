@@ -12,9 +12,14 @@
 Рабочая демонстрация находится в `app/Controllers/AuthController.php`,
 `Routes/api.php` и `database/Migrations/002_CreateUsers.php`.
 
+`app/Middleware/AuthMiddleware.php` содержит проверку авторизованного
+пользователя. Метод `userAuth()` берёт `auth_user_id` из сессии, проверяет
+наличие пользователя в таблице `users` и возвращает `true` или `false`.
+
 ## Возможности
 
 - `Router` для URL-маршрутов с параметрами;
+- route-level middleware для проверок до вызова контроллера;
 - `Request` для данных из `POST`, query-параметров, cookie, сессии и JSON;
 - `Response` для JSON-ответов;
 - `ConnectDB`, `CRUD` и `CreateTable` для MySQL через PDO;
