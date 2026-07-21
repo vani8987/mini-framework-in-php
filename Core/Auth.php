@@ -41,10 +41,19 @@ class Auth implements interfaceAuth {
         return is_string($value) ? $value : '';
     }
 
-    public function __construct(UserProviderInterface $modelBD, ?Request $request = null) {
+    public function __construct(Request|UserProviderInterface $request, ?UserProviderInterface $modelBD = null, ?Logger $logger = null) {
+        if ($request instanceof UserProviderInterface) {
+            $modelBD = $request;
+            $request = new Request();
+        }
+
+        if ($modelBD === null) {
+            throw new \InvalidArgumentException('User provider is required.');
+        }
+
         $this->modelBD = $modelBD;
-        $this->request = $request ?? new Request();
-        $this->logger = new Logger('auth.log');
+        $this->request = $request;
+        $this->logger = $logger ?? new Logger('auth.log');
         $this->passwordPepper = $this->env('HASH_KEY_PASSWORD');
 
         if ($this->passwordPepper === '') {

@@ -71,3 +71,19 @@ Router вызовет `AuthMiddleware::userAuth()` до контроллера. 
 ```
 
 Методы выполняются по порядку. Все они должны вернуть `true`.
+
+## Container
+
+Middleware маршрута создается через `Container::make()` внутри `Router`.
+Если middleware нужны `Request`, `Logger`, модель или другой сервис, передавайте
+их через конструктор и регистрируйте класс в `app/bootstrap/app.php`.
+
+Пример:
+
+```php
+$container->bind(AuthMiddleware::class, fn (Container $container): AuthMiddleware => new AuthMiddleware(
+    $container->make(Request::class),
+    $container->make(Logger::class),
+    $container->make(User::class),
+));
+```

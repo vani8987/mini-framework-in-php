@@ -4,14 +4,16 @@ namespace App\Middleware;
 
 use Core\Middleware;
 use App\Models\User;
+use Core\Logger;
+use Core\Request;
 
 class AuthMiddleware extends Middleware {
     private User $user;
 
-    public function __construct() {
-        parent::__construct();
+    public function __construct(?Request $request = null, ?Logger $logger = null, ?User $user = null) {
+        parent::__construct($request, $logger);
 
-        $this->user = new User();
+        $this->user = $user ?? new User();
     }
 
     public function userAuth(): bool {

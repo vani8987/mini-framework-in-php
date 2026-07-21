@@ -13,11 +13,11 @@ class AuthController
     private Request $request;
     private Response $response;
 
-    public function __construct()
+    public function __construct(?Auth $auth = null, ?Request $request = null, ?Response $response = null)
     {
-        $this->auth = new Auth(new User());
-        $this->request = new Request();
-        $this->response = new Response();
+        $this->request = $request ?? new Request();
+        $this->auth = $auth ?? new Auth($this->request, new User());
+        $this->response = $response ?? new Response();
     }
 
     public function register(): void

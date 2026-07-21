@@ -135,3 +135,5 @@ public/               HTTP-точка входа
 ## Лицензия
 
 Проект распространяется по лицензии [MIT](LICENSE).
+
+DI-контейнер и bootstrap приложения описаны в [docs/container.md](docs/container.md).

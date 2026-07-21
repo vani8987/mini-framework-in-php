@@ -18,8 +18,8 @@ interface ModelInterface {
 class CRUD extends ConnectDB implements ModelInterface  {
     private string $name;
 
-    public function __construct(string $name) {
-        parent::__construct();
+    public function __construct(string $name, ?Logger $logger = null) {
+        parent::__construct($logger);
         $this->name = $this->quoteIdentifier($name);
 
     }

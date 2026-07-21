@@ -32,6 +32,22 @@ Git, потому что `log/*.log` указан в `.gitignore`.
 
 ## Core-классы
 
-`ConnectDB`, `CreateTable`, `CRUD`, `Request`, `Response`, `Router` и
-`Controller` используют единый файл `system.log`. В него не записываются
-значения HTTP-запросов, пароли и параметры подключения к базе данных.
+`Request`, `Response`, `Router` и `Controller` по умолчанию используют
+`system.log`. `ConnectDB`, `CreateTable`, `CRUD` и модели обычно получают
+`database.log`, а `Auth` - `auth.log`. В логи не записываются значения
+HTTP-запросов, пароли и параметры подключения к базе данных.
+
+## Container
+
+Core-классы могут получать `Logger` через конструктор. Если логгер не передан,
+класс создает fallback-логгер сам.
+
+Примеры fallback-файлов:
+
+- `Request`, `Response`, `Router`, `Controller` - `system.log`;
+- `ConnectDB`, `CRUD`, `CreateTable`, модели - обычно `database.log`;
+- `Auth` - `auth.log`;
+- `Middleware` - `Middleware.log`.
+
+В `app/bootstrap/app.php` можно переопределить имя файла, передав нужный
+`Logger` при регистрации зависимости.

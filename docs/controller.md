@@ -28,3 +28,19 @@ class ExampleController extends Controller
     }
 }
 ```
+
+## Container
+
+Контроллеры маршрутов создаются через `Container::make()` внутри `Router`.
+Если контроллеру нужны `Request`, `Response`, `Auth` или другие сервисы,
+добавьте их в конструктор и зарегистрируйте фабрику в `app/bootstrap/app.php`.
+
+Для обратной совместимости можно оставлять fallback-значения:
+
+```php
+public function __construct(?Request $request = null, ?Response $response = null)
+{
+    $this->request = $request ?? new Request();
+    $this->response = $response ?? new Response();
+}
+```

@@ -6,8 +6,8 @@ class Controller
 {
     protected Logger $logger;
 
-    public function __construct()
+    public function __construct(?Logger $logger = null)
     {
-        $this->logger = new Logger('system.log');
+        $this->logger = $logger ?? new Logger('system.log');
     }
 }

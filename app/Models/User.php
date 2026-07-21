@@ -2,13 +2,14 @@
 namespace App\Models;
 
 use Core\CRUD;
+use Core\Logger;
 use Core\UserProviderInterface;
 
 class User extends CRUD implements UserProviderInterface
 {
-    public function __construct()
+    public function __construct(?Logger $logger = null)
     {
-        parent::__construct('users');
+        parent::__construct('users', $logger);
     }
 
     public function findByEmail(string $email): ?array {

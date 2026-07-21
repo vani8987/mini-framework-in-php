@@ -5,8 +5,8 @@ use Core\ConnectDB;
 class CreateTable extends ConnectDB {
     private string $name;
 
-    public function __construct(string $name) {
-        parent::__construct();
+    public function __construct(string $name, ?Logger $logger = null) {
+        parent::__construct($logger);
         $this->name = $name;
     }
 

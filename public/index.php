@@ -17,13 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+$container = require_once __DIR__ . '/../app/bootstrap/app.php';
+
 require_once __DIR__ . '/../Routes/api.php';
 
-use App\Models\User;
-use Core\Auth;
 use Core\Router;
 
-$auth = new Auth(new User());
-$router = new Router($auth);
+$router = $container->make(Router::class);
 
 $router->dispatch();

@@ -22,8 +22,12 @@ public function create(array $columns, array $values): bool;
 В `public/index.php` приложение выбирает модель и передаёт `Auth` в роутер:
 
 ```php
-$auth = new Auth(new User());
-$router = new Router($auth);
+$container = require_once __DIR__ . '/../app/bootstrap/app.php';
+
+require_once __DIR__ . '/../Routes/api.php';
+
+$router = $container->make(Router::class);
+$router->dispatch();
 ```
 
 В `.env` необходимо задать `HASH_KEY_PASSWORD`. Это дополнительный секрет
@@ -92,3 +96,20 @@ if (!$middleware->userAuth()) {
 5. Позже `Auth::user(['id', 'email'])` загружает безопасные данные профиля по этому ID.
 
 Никогда не запрашивайте колонку `password` через `Auth::user()`.
+
+## Container
+
+В текущей версии приложение собирает авторизацию через `app/bootstrap/app.php`.
+`public/index.php` подключает контейнер, регистрирует маршруты и получает router:
+
+```php
+$container = require_once __DIR__ . '/../app/bootstrap/app.php';
+
+require_once __DIR__ . '/../Routes/api.php';
+
+$router = $container->make(Router::class);
+$router->dispatch();
+```
+
+`Auth` получает `Request`, модель пользователя и логгер из контейнера. Старый
+вариант `new Auth(new User())` поддерживается для обратной совместимости.
